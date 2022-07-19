@@ -4,7 +4,7 @@
  * Author:      Liv Bouligny
  * Date:        14 July 2022
  */
-
+#include <wemo.h>
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_NeoPixel.h>
@@ -15,7 +15,6 @@
 #include <Wire.h>
 #include <math.h>
 #include <SPI.h>
-#include <Ethernet.h>
 #include <mac.h>
 #include <hue.h>
 
@@ -36,6 +35,7 @@ bool modeState = LOW;
 bool last = LOW;
 bool onState = LOW;
 int currentSide;
+int deviceArray[8] = {1,2,3,4,5,6,0,2};
 
 OneButton button1(20,false);
 Adafruit_MPU6050 mpu;
@@ -97,20 +97,20 @@ void setup() {
 
   pixel.begin();
   pixel.setBrightness(125);
-  pixel.show();
-  
+  pixel.show();  
+  i=0;
 }
 
 void loop() {    
-  currentTime = millis();
-  if (( currentTime - lastTime) >3000) {
-    readAccel();
-    currentSide = checkSide(angle);
-    Serial.printf("Current side up: %i\n",currentSide);
-    Serial.printf("%f\n",angle);
-    lastTime = millis ();
-  }
-  
+//  currentTime = millis();
+//  if (( currentTime - lastTime) >3000) {
+//    readAccel();
+//    currentSide = checkSide(angle);
+//    Serial.printf("Current side up: %i\n",currentSide);
+//    Serial.printf("%f\n",angle);
+//    lastTime = millis ();
+//  }
+//  
 
 //  if ((angle < 290.00) && (angle > 260.00))  {
 //    display.printf("Rolled a 1!\n Dumpster fire initiated!\n");
@@ -125,20 +125,44 @@ void loop() {
 //  
 //  delay(500);  
 //  currentAngle = ((360*rad) / (2*M_PI) + 180);  
- 
+  
   button1.tick();
-  if (!modeState) {
-    if (buttonState) {
-      Serial.printf("Button Pressed\n");
-      pixel.fill(blue, 0, 32);
-      pixel.show();
-      while (buttonSt
-    }
-    else  {
-      pixel.fill(red, 0, 32);
-      pixel.show();
-    }
-  }  
+  while (!modeState) {     
+    button1.tick();
+    if (buttonState != last) {  
+      if (buttonState) {    
+        Serial.printf("ButtonState: %i\n",buttonState);        
+        if (i < 6)  {
+          Serial.printf("Hue light %i on!\n",deviceArray[i]);
+          setHue(deviceArray[i],true,HueRainbow[(i)],200,255);
+          pixel.fill(green, 0, 32);
+          pixel.show(); 
+        }
+        else  {
+          Serial.printf("Wemo %i on!\n",deviceArray[i]);
+          switchON(deviceArray[i]);
+          pixel.fill(green, 0, 32);
+          pixel.show(); 
+        }
+      }
+      else  {
+        Serial.printf("ButtonState: %i\n",buttonState);
+        if (i < 6)  {
+          Serial.printf("Hue light %i off!\n",deviceArray[i]);
+          pixel.fill(red, 0, 32);
+          pixel.show();
+          setHue(deviceArray[i],false,0,0,0);  
+        }
+        else {
+          Serial.printf("Wemo %i off!\n",deviceArray[i]);
+          switchOFF(deviceArray[i]);  
+          pixel.fill(red, 0, 32);
+          pixel.show();    
+        }
+      }
+      last = buttonState;      
+    } 
+  } 
 }
 
 void printIP() {
@@ -154,40 +178,27 @@ void click1()  {
 }
 
 void doubleClick1() {
-  Serial.printf("Double Clicked\n");
+  modeState = !modeState;
+  if (modeState == true)  {
+    Serial.printf("modeState: %i  Automatic Roll mode initiated!\n",modeState);
+  }
+  else  {
+    Serial.printf("modeState: %i  Manual mode initiated!\n",modeState);    
+  }
 }
 
 void longPressStart1()  {  
 }
 
-void longPress1() {
-  i=2;
-  pixel.fill(rainbow[i],0,32);
-  pixel.show();  
-  delay(250);
-  i++;
-  pixel.fill(rainbow[i],0,32);
-  pixel.show(); 
-  delay(250);
-  i++;
-  pixel.fill(rainbow[i],0,32);
-  pixel.show();
-  delay(250);
+void longPress1() {  
 }
 
-void longPressStop1() {
-  i=15;
-  pixel.fill(rainbow[i],0,32);
-  pixel.show();
-  delay(250);
-  i--;
-  pixel.fill(rainbow[i],0,32);
-  pixel.show();
-  delay(250);
-  i--;
-  pixel.fill(rainbow[i],0,32);
-  pixel.show();
-  delay(250);
+void longPressStop1() {  
+  i++;
+  if(i > 7) {
+    i = 0;
+  }
+  Serial.printf("i = %i\n", i);
 }
 
 void readAccel() {
