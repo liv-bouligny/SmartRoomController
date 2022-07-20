@@ -164,7 +164,7 @@ void setup() {
   display.display();
   delay(2000);
   display.clearDisplay();
-  display.setCursor(1,1);
+  display.setCursor(0,0);
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
   display.clearDisplay();  
@@ -276,23 +276,8 @@ void click1()  {
 }
 
 void doubleClick1() {
-  rollMode = !rollMode;
-  if (rollMode == true)  {
-    Serial.printf("rollMode: %i  Automatic Roll mode initiated!\n",rollMode);
-  }
-  else  {
-    Serial.printf("rollMode: %i  Manual mode initiated!\n",rollMode);    
-  }
-}
-
-void longPressStart1()  {  
-}
-
-void longPress1() {  
-}
-
-void longPressStop1() { 
   display.clearDisplay(); 
+  display.setCursor(0,0);
   display.display();
   display.printf("Now controlling...\n");
   display.display();
@@ -307,6 +292,22 @@ void longPressStop1() {
     }
     if(i > 7) {
       i = 0;
+  }  
+}
+
+void longPressStart1()  {  
+}
+
+void longPress1() {  
+}
+
+void longPressStop1() { 
+  rollMode = !rollMode;
+  if (rollMode == true)  {
+    Serial.printf("rollMode: %i  Automatic Roll mode initiated!\n",rollMode);
+  }
+  else  {
+    Serial.printf("rollMode: %i  Manual mode initiated!\n",rollMode);    
   }  
 }
 
@@ -372,6 +373,7 @@ void critSuccess () {
   pixel.fill(black,0,32);
   pixel.show(); 
   display.clearDisplay(); 
+  display.setCursor(0,0);
   display.display();
   delay(PXDELAY);
   for (px = 0; px < 33; (px-0)) {
@@ -384,14 +386,14 @@ void critSuccess () {
     drawBitMap();
   }
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
   pixel.clear();
   pixel.show();
   for (j=0; j<3;j++)  {
-    drawBitMap();
-    for (px = 16; px < 20; (px-0)) {
+    drawBitMap();    
       for ( i = 0; i < 7; i++) {
-        pixel.setPixelColor(px, rainbow[i]);
+        pixel.fill(rainbow[i],16,4);
         pixel.show();      
         px++;   
         if (i<6)  {
@@ -400,8 +402,7 @@ void critSuccess () {
         else  {
          switchON(deviceArray[7]);           
         }      
-      }      
-    }    
+      }         
     delay(PXDELAY);
     pixel.clear();
     pixel.show();
@@ -419,11 +420,13 @@ void critSuccess () {
   pixel.clear();
   pixel.show();
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
 }
 
 void critFail() {  
   switchON(deviceArray[6]);
+  display.setCursor(0,0);
   display.printf("Warning! Alien Invasion Imminent!\n");
   display.display();
   for (px = 0; px < 33; (px++)) {
@@ -443,12 +446,12 @@ void critFail() {
   pixel.show();
   for (i=0; i<7;i++)  { 
     if (i<6)  {
-        setHue(deviceArray[i],true,HueRed,200,255);
-        delay(20);
-      }
-      else  {
-         switchON(deviceArray[6]);           
-      }   
+      setHue(deviceArray[i],true,HueRed,200,255);
+      delay(20);
+    }
+    else  {
+       switchON(deviceArray[6]);           
+    }   
     for (px = 0; px < 4; (px++)) {      
       pixel.setPixelColor(px, red);
       pixel.show();      
@@ -471,11 +474,13 @@ void critFail() {
   pixel.clear();
   pixel.show();
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
 }
 
 void rollTwo()  {
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
   pixel.clear();
   pixel.show();
@@ -489,10 +494,12 @@ void rollTwo()  {
   pixel.clear();
   pixel.show();
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
 }
 void rollThree()  {
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
   pixel.clear();
   pixel.show();
@@ -506,10 +513,12 @@ void rollThree()  {
   pixel.clear();
   pixel.show();
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
 }
 void rollFour()  {
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
   pixel.clear();
   pixel.show();
@@ -523,10 +532,12 @@ void rollFour()  {
   pixel.clear();
   pixel.show();
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
 }
 void rollFive()  {
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
   pixel.clear();
   pixel.show();
@@ -540,10 +551,12 @@ void rollFive()  {
   pixel.clear();
   pixel.show();
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
 }
 void rollSix()  {
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
   pixel.clear();
   pixel.show();
@@ -557,10 +570,12 @@ void rollSix()  {
   pixel.clear();
   pixel.show();
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
 }
 void rollSeven()  {
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
   pixel.clear();
   pixel.show();
@@ -574,10 +589,12 @@ void rollSeven()  {
   pixel.clear();
   pixel.show();
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
 }
 void drawBitMap ()  {
   display.clearDisplay();
+  display.setCursor(0,0);
   display.display();
   display.drawBitmap (
     (display.width() - LOGOWIDTH ) /2,
