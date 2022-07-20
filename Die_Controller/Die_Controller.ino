@@ -31,9 +31,11 @@ int px = 0;
 int currentTime;
 int lastTime = 1000;
 bool buttonState;
-bool modeState = LOW;
+bool rollMode = LOW;
+bool moveState = LOW;
 bool last = LOW;
 bool onState = LOW;
+int previousSide;
 int currentSide;
 int deviceArray[8] = {1,2,3,4,5,6,0,2};
 
@@ -101,24 +103,7 @@ void setup() {
   i=0;
 }
 
-void loop() {    
-//  currentTime = millis();
-//  if (( currentTime - lastTime) >3000) {
-//    readAccel();
-//    currentSide = checkSide(angle);
-//    Serial.printf("Current side up: %i\n",currentSide);
-//    Serial.printf("%f\n",angle);
-//    lastTime = millis ();
-//  }
-//  
-
-//  if ((angle < 290.00) && (angle > 260.00))  {
-//    display.printf("Rolled a 1!\n Dumpster fire initiated!\n");
-//    display.display();
-//    while ((angle < 290.00) && (angle > 260.00)) {
-//      readAccel();
-//    }
-//  }
+void loop() {
 //  Serial.printf("Acceleration Y: %0.03f X:%0.03f\n:",a.acceleration.y,a.acceleration.x);
 //  Serial.printf("Radians: %0.03f\n",rad);
 //  Serial.printf("Angle: %0.03f\n",angle);
@@ -127,7 +112,7 @@ void loop() {
 //  currentAngle = ((360*rad) / (2*M_PI) + 180);  
   
   button1.tick();
-  while (!modeState) {     
+  while (!rollMode) {     
     button1.tick();
     if (buttonState != last) {  
       if (buttonState) {    
@@ -162,7 +147,23 @@ void loop() {
       }
       last = buttonState;      
     } 
-  } 
+  }
+//  readAccel();
+//  currentSide = checkSide(angle);
+//  previousSide = currentSide;
+//  while (rollMode) {
+//    button1.tick();
+//    readAccel();
+//    currentSide = checkSide(angle);    
+//    if (currentSide != previousSide)  {             
+//      delay(5000);          
+//      readAccel();
+//      currentSide = checkSide(angle);
+//      Serial.printf("Current side up: %i\n",currentSide);
+//      Serial.printf("%f\n",angle);             
+//      previousSide = currentSide;     
+//    }
+//  }
 }
 
 void printIP() {
@@ -178,12 +179,12 @@ void click1()  {
 }
 
 void doubleClick1() {
-  modeState = !modeState;
-  if (modeState == true)  {
-    Serial.printf("modeState: %i  Automatic Roll mode initiated!\n",modeState);
+  rollMode = !rollMode;
+  if (rollMode == true)  {
+    Serial.printf("rollMode: %i  Automatic Roll mode initiated!\n",rollMode);
   }
   else  {
-    Serial.printf("modeState: %i  Manual mode initiated!\n",modeState);    
+    Serial.printf("rollMode: %i  Manual mode initiated!\n",rollMode);    
   }
 }
 
